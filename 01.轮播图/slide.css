@@ -1,0 +1,93 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+}
+
+img {
+    display: block;
+}
+
+.clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.banner {
+    margin: 50px auto 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.imgs {
+    position: absolute;
+    top: 0;
+}
+
+.imgs li {
+    float: left;
+}
+
+.arrow {
+    display: none;
+}
+
+.banner:hover .arrow {
+    display: block;
+}
+
+.arrow .btn_l, .arrow .btn_r {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 38px;
+    background-color: rgba(0,0,0, .3);
+    color: #fff;
+    font-size: 24px;
+    position: absolute;
+    top: 50%;
+    margin-top: -20px;
+    cursor: pointer;
+}
+
+.arrow .btn_l {
+    left: -10px;
+    border-radius: 0 20px 20px 0;
+}
+
+.arrow .btn_r {
+    right: -10px;
+    border-radius: 20px 0 0 20px;
+}
+
+.nav_dots {
+    display: inline-block;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background-color: rgba(0,0,0, .3);
+    padding: 2px 6px;
+    border-radius: 10px;
+    
+}
+
+.nav_dots span {
+    display: block;
+    float: left;
+    width: 12px;
+    height: 12px;
+    margin: 2px;
+    background-color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.nav_dots .active {
+    background-color: sandybrown;
+}
