@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动画插件</title>
+    <script src="./animate.js"></script>
+    <style>
+        .demo {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+        }
+    </style>
+</head>
+<body>
+    <button id="btnBegin">开始</button>
+    <button id="btnStop">暂停</button>
+    <div class="demo"></div>
+    <script>
+        // var oBegin = document.querySelector('#begin'),
+        //     oStop = document.querySelector('#stop');
+
+        var animate = new myPlugins.Animate({
+            dom: document.querySelector('.demo'),       // 设置动画的目标元素
+            style: {     // 动画属性和结束值
+                top: 300,
+                left: 500,
+                opacity: 0.1,
+                backgroundColor: 'rgb(0, 0, 255)'
+            },
+            step: 16,   // 每次动画时间，单位“毫秒”
+            duration: 5000,     // 动画总持续时间，单位“毫秒”
+            moving: moving,
+            end: animateEnd,
+        });
+
+        function moving(status) {
+            console.log(status);
+        }
+
+        function animateEnd() {
+            console.log('结束');
+        }
+
+        btnBegin.onclick = function() {
+            animate.start(function() {
+                console.log('开始');
+            });
+        }
+        btnStop.onclick = function() {
+            animate.stop(function() {
+                console.log('暂停');
+            });
+        }
+
+        
+        
+    </script>
+
+</body>
+</html>
