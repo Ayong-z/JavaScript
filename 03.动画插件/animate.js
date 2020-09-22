@@ -4,21 +4,20 @@ if(!this.myPlugins) {
 
 this.myPlugins.Animate = function(config) {
     this.config = Object.assign({}, {       // 默认设置参数
-        dom: null,      // 设置动画的目标元素
-        style: {},       // 动画属性和结束值
+        begin: {},       // 元素动画开始样式
+        end: {},         // 元素动画结束样式
         step: 16,       // 每次动画时间，单位“毫秒”
         duration: 1000,     // 动画总持续时间，单位“毫秒”
-        moving: function() {},
-        end: function() {}
+        running: function(data) {console.log(data)},     // 
+        over: function() {console.log('结束')}
     }, config)
     
     this.curStep = 0;   // 当前运动次数
     this.timer = null;
     this.stepNum = Math.ceil(this.config.duration / this.config.step);     // 运动持续时间内运动次数
-    this.endColor = this.getColorValue(this.config.style.backgroundColor);     // 颜色变化结束值
-    this.begin = this.getBeginStyle();     // 动画属性开始值
+    this.beginStyle = this.clone(this.config.begin, true);
+    this.endStyle = this.clone(this.config.end, true);
     this.distance = this.getDistance();     // 动画属性每次运动的距离
-
 }
 
 this.myPlugins.Animate.prototype = {
@@ -48,51 +47,8 @@ this.myPlugins.Animate.prototype = {
             return;
         }else {
             this.timer = setInterval(function() {
-                self.onceSport();
+                self.onceRun();
             }, self.config.step)
-        }
-    },
-
-
-    /**
-     * 单次动画
-     */
-    onceSport: function() {
-        this.curStep++;
-        if(this.curStep >= this.stepNum) {
-            for(var prop in this.config.style) {
-                if(prop === 'backgroundColor') {
-                    this.setColor();
-                }else {
-                    this.setStyle(prop);
-                    this.begin[prop] = this.config.style[prop];
-                }
-            }
-            clearInterval(this.timer);
-            this.timer = null;
-            this.config.end();
-        }else {
-            for(var prop in this.config.style) {
-                if(prop === 'backgroundColor') {
-                    this.setColor();
-                }else {
-                    this.begin[prop] += this.distance[prop];
-                    this.setStyle(prop)
-                }
-            }
-        }
-        this.config.moving(this.begin); 
-    },
-
-
-    /**
-     * 样式赋值更新
-     */
-    setStyle: function(prop) {
-        if(prop === 'opacity') {
-            this.config.dom.style[prop] = this.curStep >= this.stepNum ? this.config.style[prop] : this.begin[prop]
-        }else {
-            this.config.dom.style[prop] = (this.curStep >= this.stepNum ? this.config.style[prop] : this.begin[prop]) + 'px';
         }
     },
 
@@ -100,89 +56,103 @@ this.myPlugins.Animate.prototype = {
     /**
      * 颜色赋值更新
      */
-    setColor: function() {
-        var color = null;
-        if(this.curStep >= this.stepNum) {     // 最后一次颜色动画赋值
-            color = {
-                r: this.endColor.r,
-                g: this.endColor.g,
-                b: this.endColor.b
-            }
-            for(var prop in this.endColor) {
-                this.begin.color[prop] = this.endColor[prop];
+    setColor: function(color) {
+        if(this.curStep >= this.stepNum) {
+            for(var prop in this.beginStyle[color]) {
+                this.beginStyle[color][prop] = this.endStyle[color][prop];
             }
         }else {
-            for(var prop in this.endColor) {    // 当前动画颜色赋值
-                this.begin.color[prop] += this.distance.color[prop];
-            }
-            color = {
-                r: this.begin.color.r,
-                g: this.begin.color.g,
-                b: this.begin.color.b
+            for(var prop in this.beginStyle[color]) {
+                this.beginStyle[color][prop] += this.distance[color][prop];
             }
         }
-        this.config.dom.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
     },
 
 
+    /**
+     * 单次动画
+     */
+    onceRun: function() {
+        this.curStep++;
+        if(this.curStep >= this.stepNum) {
+            for(var prop in this.beginStyle) {
+                if( typeof(this.beginStyle[prop] ) === 'object') {
+                    this.setColor(prop);
+                }else {
+                    this.beginStyle[prop] = this.endStyle[prop];
+                }
+            }
+            clearInterval(this.timer);
+            this.timer = null;
+            this.config.over();
+        }else {
+            for(var prop in this.beginStyle) {
+                if( typeof(this.beginStyle[prop] ) === 'object') {
+                    this.setColor(prop);
+                }else {
+                    this.beginStyle[prop] += this.distance[prop];
+                }
+            }
+        }
+        this.config.running(this.beginStyle); 
+    },
+
+
+    /**
+     * 获取颜色单次动画的颜色差值
+     */
+    getOnceColorValue: function(beginColor, endColor) {
+        var obj = {}
+        for(var prop in beginColor) {
+            obj[prop] = (endColor[prop] - beginColor[prop]) / this.stepNum;    // 颜色动画每次变化的数值
+        }
+        return obj;
+    },
+
+
+    
     /**
      * 获取单次动画每次运动的距离
      */
     getDistance: function() {
         var obj = {};
-        for(var prop in this.config.style) {    // 获取动画开始到动画结束的参数总差值
-            if(prop === 'backgroundColor') {
-                obj.color = {}
-                for(var value in this.endColor) {
-                    obj.color[value] =(this.endColor[value] - this.begin.color[value]) / this.stepNum;
+        for(var prop in this.beginStyle) {    // 获取动画开始到动画结束的参数总差值
+            if(typeof(this.beginStyle[prop]) === 'object') {
+                obj[prop] = this.getOnceColorValue(this.beginStyle[prop], this.endStyle[prop]);
+            }else {
+                obj[prop] = (this.config.end[prop] - this.config.begin[prop]) / this.stepNum;
+            }
+        }
+        return obj;
+    },
+
+
+    /**
+     * 对象克隆
+     * @param {*} obj 被克隆的对象
+     * @param {*} deep 是否深度克隆，true/false
+     */
+    clone: function(obj, deep) {
+        if(Array.isArray(obj)) {    // 被克隆的对象为数组
+            if(deep) {
+                var newObj = [];
+                for(var i = 0; i < obj.length; i ++) {
+                    this.clone(obj[i], deep);
                 }
             }else {
-                obj[prop] = (this.config.style[prop] - this.begin[prop]) / this.stepNum;
+                return obj.slice();
             }
-        }
-        return obj;
-    },
-
-    
-    /**
-     * 获取动画开始属性值
-     */
-    getBeginStyle: function() {
-        var obj = {};
-            domStyle = getComputedStyle(this.config.dom);
-        for(var prop in this.config.style) {    // 获取动画属性的开始值
-            if(prop === 'backgroundColor') {
-                obj.color = this.getColorValue(domStyle.backgroundColor);
-            }else {
-                obj[prop] = parseFloat(domStyle[prop]);
+        }else if(typeof(obj) === 'object') {   // 被克隆对象为对象
+            var newObj = {};
+            for(var prop in obj) {
+                if(deep) {      // 深度克隆，递归
+                    this.clone(obj[prop], deep);
+                }
+                newObj[prop] = obj[prop];
             }
+        }else {     // 被克隆的对象为原始值
+            return obj;
         }
-        return obj;
-    },
-
-
-    /**
-     * 获取颜色单次动画的颜色值
-     */
-    getOnceColorValue: function() {
-        var obj = {}
-        for(var prop in this.begin.color) {
-            obj[prop] = (this.endColor[prop] - this.begin.color[prop]) / this.stepNum;    // 颜色动画每次变化的数值
-        }
-        return obj;
-    },
-
-
-    /**
-     * 获取颜色的rgb值
-     */
-    getColorValue: function(color) {
-        var reg = /\d{1,3}/g,  // 匹配颜色rgb参数值
-            value = color.match(reg);
-        return {        // 返回颜色的rgb参数值
-            r: parseInt(value[0]),
-            g: parseInt(value[1]),
-            b: parseInt(value[2])
-        }
+        return newObj;
     }
 }

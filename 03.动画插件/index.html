@@ -21,30 +21,33 @@
     <button id="btnStop">暂停</button>
     <div class="demo"></div>
     <script>
-        // var oBegin = document.querySelector('#begin'),
-        //     oStop = document.querySelector('#stop');
+        var dom = document.querySelector('.demo');
 
         var animate = new myPlugins.Animate({
-            dom: document.querySelector('.demo'),       // 设置动画的目标元素
-            style: {     // 动画属性和结束值
+            begin: {    // 元素动画开始样式
+                top: 50,
+                left: 50,
+                opacity: 1,
+                bgColor: { r: 255, g: 0, b: 0 }
+            },
+            end: {     // 元素动画结束样式
                 top: 300,
                 left: 500,
                 opacity: 0.1,
-                backgroundColor: 'rgb(0, 0, 255)'
+                bgColor: { r: 0, g: 0, b: 255 }
             },
             step: 16,   // 每次动画时间，单位“毫秒”
             duration: 5000,     // 动画总持续时间，单位“毫秒”
-            moving: moving,
-            end: animateEnd,
+            running: function(data) {
+                dom.style.top = data.top + 'px';
+                dom.style.left = data.left + 'px';
+                dom.style.opacity = data.opacity;
+                dom.style.backgroundColor = `rgb(${data.bgColor.r}, ${data.bgColor.g}, ${data.bgColor.b})`;
+            },   
+            over: function() {
+                console.log('结束');
+            },
         });
-
-        function moving(status) {
-            console.log(status);
-        }
-
-        function animateEnd() {
-            console.log('结束');
-        }
 
         btnBegin.onclick = function() {
             animate.start(function() {
