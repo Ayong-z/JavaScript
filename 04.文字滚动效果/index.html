@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+        
+        li {
+            list-style: none;
+        }
+        .wrapper {
+            height: 40px;
+            padding: 0 10px;
+            /* box-sizing: border-box; */
+            background-color: rgb(164, 213, 255);
+            line-height: 40px;
+            font-size: 18px;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .wrapper .title {
+            margin-right: 15px;
+        }
+
+        .wrapper .title::after {
+            content: "|";
+            margin-left: 10px;
+            color: #eee;
+        }
+
+        .wrapper .scrollText ul {
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .wrapper .scrollText li {
+            line-height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="title left">实时战况</div>
+        <div class="scrollText left">
+            <ul>
+                <li>1. Lorem ipsum dolor, sit amet consectetur adipisicing elit.</li>
+                <li>2. Dolorem similique neque quos fugit. Architecto, ducimus inventore.</li>
+                <li>3. In ipsum perferendis, architecto esse unde harum incidunt!</li>
+                <li>4. Fugit nam maxime distinctio fuga delectus numquam error.</li>
+                <li>5. Consequuntur sit accusamus culpa dolor aperiam neque a.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="./animate.js"></script>
+    <script src="./index.js"></script>
+</body>
+</html>
