@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手风琴效果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+        
+        .wrapper {
+            width: 300px;
+            margin: 100px auto 0 auto;
+            border: 1px solid rgb(236, 236, 236);
+        }
+
+        .wrapper .item {
+            margin-bottom: 6px;
+        }
+
+        .wrapper .item:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .wrapper .item h2 {
+            color: #666;
+            font-size: 18px;
+            line-height: 36px;
+            font-weight: 400;
+            padding-left: 10px;
+            background-color: rgb(231, 231, 231);
+            cursor: pointer;
+        }
+
+        .wrapper .item ul {
+            height: 0;
+            margin-left: 20px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .wrapper .item ul.active {
+            display: block;
+        }
+
+        .wrapper ul li {
+            box-sizing: border-box;
+            height: 32px;
+            line-height: 32px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .wrapper ul li:last-child {
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="item">
+            <h2>电影</h2>
+            <ul>
+                <li><a href="">Lorem, ipsum dolor.</a></li>
+                <li><a href="">Illum, commodi deleniti!</a></li>
+                <li><a href="">Quibusdam, tempore quam.</a></li>
+                <li><a href="">Libero, sunt dolorem.</a></li>
+                <li><a href="">Voluptate, quasi. At.</a></li>
+            </ul>
+        </div>
+        <div class="item">
+            <h2>音乐</h2>
+            <ul>
+                <li><a href="">Lorem, ipsum dolor.</a></li>
+                <li><a href="">Illum, commodi deleniti!</a></li>
+                <li><a href="">Quibusdam, tempore quam.</a></li>
+            </ul>
+        </div>
+        <div class="item">
+            <h2>游戏</h2>
+            <ul>
+                <li><a href="">Lorem, ipsum dolor.</a></li>
+                <li><a href="">Illum, commodi deleniti!</a></li>
+                <li><a href="">Quibusdam, tempore quam.</a></li>
+                <li><a href="">Libero, sunt dolorem.</a></li>
+                <li><a href="">Voluptate, quasi. At.</a></li>
+            </ul>
+        </div>
+        <div class="item">
+            <h2>动漫</h2>
+            <ul>
+                <li><a href="">Lorem, ipsum dolor.</a></li>
+                <li><a href="">Illum, commodi deleniti!</a></li>
+                <li><a href="">Quibusdam, tempore quam.</a></li>
+                <li><a href="">Libero, sunt dolorem.</a></li>
+            </ul>
+        </div>
+        <div class="item">
+            <h2>书籍</h2>
+            <ul>
+                <li><a href="">Lorem, ipsum dolor.</a></li>
+                <li><a href="">Illum, commodi deleniti!</a></li>
+                <li><a href="">Quibusdam, tempore quam.</a></li>
+                <li><a href="">Libero, sunt dolorem.</a></li>
+                <li><a href="">Voluptate, quasi. At.</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="./animate.js"></script>
+    <script src="./index.js"></script>
+</body>
+</html>
